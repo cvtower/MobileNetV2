@@ -7,8 +7,8 @@ According to the paper: [Inverted Residuals and Linear Bottlenecks Mobile Networ
 ## Requirement
 - OpenCV 3.4
 - Python 3.5    
-- Tensorflow-gpu 1.2.0  
-- Keras 2.1.3
+- Tensorflow-gpu 1.2.0~1.8.0  
+- Keras 2.1.3~2.2.0
 
 
 ## MobileNet v2 and inverted residual block architectures
@@ -69,18 +69,14 @@ python train.py --classes num_classes --batch batch_size --epochs epochs --size 
 
 Due to the limited computational resources, we used cifar-100 dataset to test the model.
 	
-	device: Tesla K80
+	device: 1080Ti*2
 	dataset: cifar-100
 	optimizer: Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-08)  
-	batch_szie: 128 
+	batch_szie: 160 
 
 These are the details for the CIFAR-100 experiment. Although the network did not completely converge, still achieved good accuracy.
+Train/valid acc will be uploaded later, since training paras have been changed here.
 
-| Metrics | Loss | Top-1 Accuracy | Top-5 Accuracy |
-| ------- |------| :------------: | :------------: |
-| cifar-100 | 0.195 | 94.42% | 99.82% |
-
-![evaluate](/images/eva.png)
 ## Reference
 
 	@article{MobileNetv2,  
