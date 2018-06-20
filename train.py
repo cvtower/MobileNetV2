@@ -10,9 +10,14 @@ from mobilenet_v2 import MobileNetv2
 
 from keras.optimizers import Adam
 from keras.preprocessing.image import ImageDataGenerator
+from keras.utils.training_utils import multi_gpu_model
 from keras.callbacks import EarlyStopping
 from keras.layers import Conv2D, Reshape, Activation
 from keras.models import Model
+
+#make modification if you need alternative training plan.
+#os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID" 
+#os.environ["CUDA_VISIBLE_DEVICES"]="1"
 
 
 def main(argv):
@@ -141,13 +146,16 @@ def train(batch, epochs, num_classes, size, weights, tclasses):
         model = fine_tune(num_classes, weights, model)
     else:
         model = MobileNetv2((size, size, 3), num_classes)
-
+    G = 2 #i have 2 gpu available here.
+    model = multi_gpu_model(model, gpus=G)
     opt = Adam()
     earlystop = EarlyStopping(monitor='val_acc', patience=30, verbose=0, mode='auto')
     model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
 
     hist = model.fit_generator(
         train_generator,
+        nb_worker=6,
+        shuffle=True,
         validation_data=validation_generator,
         steps_per_epoch=count1 // batch,
         validation_steps=count2 // batch,
